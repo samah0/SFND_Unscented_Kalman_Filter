@@ -63,10 +63,10 @@ RM = /usr/local/Cellar/cmake/3.19.1/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter-master
+CMAKE_SOURCE_DIR = /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter-master/build
+CMAKE_BINARY_DIR = /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter/build
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -93,14 +93,14 @@ clean: CMakeFiles/ukf_highway.dir/clean
 CMakeFiles/ukf_highway.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ukf_highway.dir/build.make CMakeFiles/ukf_highway.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ukf_highway.dir/build.make CMakeFiles/ukf_highway.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter-master/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target ukf_highway"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter/build/CMakeFiles --progress-num=1,2,3,4,5 "Built target ukf_highway"
 .PHONY : CMakeFiles/ukf_highway.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/ukf_highway.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter-master/build/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter/build/CMakeFiles 5
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/ukf_highway.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter-master/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/samah/sensor_fusion/projects/SFND_Unscented_Kalman_Filter/build/CMakeFiles 0
 .PHONY : CMakeFiles/ukf_highway.dir/rule
 
 # Convenience name for target.
