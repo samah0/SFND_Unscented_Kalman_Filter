@@ -52,6 +52,10 @@ class UKF {
   void UpdateState(Eigen::VectorXd* x_out, 
                    Eigen::MatrixXd* P_out,MeasurementPackage meas_package);
 
+  void PredictLaserMeasurement(Eigen::VectorXd* z_out, 
+                               Eigen::MatrixXd* S_out);
+  void UpdateState_Laser(Eigen::VectorXd* x_out, 
+                   Eigen::MatrixXd* P_out, MeasurementPackage meas_package);
   // initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
 
@@ -82,8 +86,18 @@ class UKF {
   // matrix with sigma points in measurement space
   Eigen::MatrixXd Zsig_;
   
-  // measurement covariance matrix S
+  // mean predicted measurement
+  Eigen::VectorXd z_pred_laser_;
+  
+  // matrix with sigma points in measurement space
+  Eigen::MatrixXd Zsig_laser_;
+
+  
+  // measurement covariance matrix S: RADAR
   Eigen:: MatrixXd S_;
+  
+  // measurement covariance matrix S: LASER
+  Eigen:: MatrixXd S_laser_;
 
   // measurement noise covariance matrix
   //Eigen::MatrixXd R;
