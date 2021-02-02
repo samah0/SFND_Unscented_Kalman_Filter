@@ -41,8 +41,8 @@ class UKF {
    */
   void UpdateRadar(MeasurementPackage meas_package);
 
-  
-  void GenerateSigmaPoints(Eigen::MatrixXd* Xsig_out);
+ 
+  //void GenerateSigmaPoints(Eigen::MatrixXd* Xsig_out);
   void AugmentedSigmaPoints(Eigen::MatrixXd* Xsig_out);
   void SigmaPointPrediction(Eigen::MatrixXd* Xsig_out, double delta_t);
   void PredictMeanAndCovariance(Eigen::VectorXd* x_pred, 
@@ -56,6 +56,8 @@ class UKF {
                                Eigen::MatrixXd* S_out);
   void UpdateState_Laser(Eigen::VectorXd* x_out, 
                    Eigen::MatrixXd* P_out, MeasurementPackage meas_package);
+  
+         
   // initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
 
@@ -75,7 +77,7 @@ class UKF {
   Eigen::MatrixXd Xsig_pred_;
   
   // sigma points matrix
-  Eigen::MatrixXd Xsig_;
+  //Eigen::MatrixXd Xsig_;
   
   // augmented sigma points matrix
   Eigen::MatrixXd Xsig_aug_;
@@ -99,8 +101,7 @@ class UKF {
   // measurement covariance matrix S: LASER
   Eigen:: MatrixXd S_laser_;
 
-  // measurement noise covariance matrix
-  //Eigen::MatrixXd R;
+  // measurement noise covariance matrix 
   Eigen::MatrixXd R_laser_;
   Eigen::MatrixXd R_radar_;
 
@@ -131,7 +132,6 @@ class UKF {
   // Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
 
-
   // State dimension
   int n_x_;
 
@@ -140,14 +140,10 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
-  
-  double lambda;
-  
+   
   // set measurement dimension, radar can measure r, phi, and r_dot
   int n_z_;
-  
-  // previous timestamp
-  long long previous_timestamp_;
+ 
 };
 
 #endif  // UKF_H
