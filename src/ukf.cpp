@@ -76,20 +76,17 @@ UKF::UKF() {
   R_laser_= MatrixXd(2, 2).setZero();
   R_radar_ = MatrixXd(3, 3).setZero();
   
-  // initial weights of sigma points
-  weights_ = VectorXd(2*n_aug_+1).setZero();
-  
   // initialize spreading parameter
   lambda_ = 3 - n_aug_; 
-  
-  // set vector for weights
+ 
+  // initial weights of sigma points
+  weights_ = VectorXd(2*n_aug_+1).setZero();
+ 
+  // set weights
   double weight_0 = lambda_/(lambda_+n_aug_);
-  
-  // initialize weights
-  double weight = 0.5/(lambda_+n_aug_);
   weights_(0) = weight_0;
-
-  for (int i=1; i<2*n_aug_+1; ++i) {  
+  for (int i=1; i<2*n_aug_+1; ++i) {  // 2n+1 weights
+    double weight = 0.5/(n_aug_+lambda_);
     weights_(i) = weight;
   }
   
@@ -121,11 +118,13 @@ UKF::UKF() {
    * TODO: Complete the initialization. See ukf.h for other member properties.
    * Hint: one or more values initialized above might be wildly off...
    */
+   
 }
 
 UKF::~UKF() {}
 
 void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
+
   /**
    * TODO: Complete this function! Make sure you switch between lidar and radar
    * measurements.
@@ -151,8 +150,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       double yaw = atan2(vy,vx);
       
       // set the state with the initial location and velocity
-      //x_ << x, y, v, yaw, 0;
-      x_ << x, y, v, 0, 0;
+      x_ << x, y, v, yaw, 0;
+      //x_ << x, y, v, 0, 0;
   
       // Initialize the state covariance matrix P
       /* P_ << std_radr_*std_radr_, 0, 0, 0, 0,
@@ -189,7 +188,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
              0, 0, 0, 0, 1;
   
      // initialize measurement noise covariance matrix - radar
-     R_radar_  <<  std_radr_*std_radr_, 0, 0,
+     R_radar_ <<  std_radr_*std_radr_, 0, 0,
                   0, std_radphi_*std_radphi_, 0,
                   0, 0,std_radrd_*std_radrd_;
      
@@ -198,32 +197,26 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
                  0, std_laspy_;
 
     // previous timestamp
-    time_us_ = meas_package.timestamp_; 
+    time_us_ = meas_package.timestamp_; //Time is measured in seconds.
    
     // done initializing, no need to predict or update
     is_initialized_ = true;
     return;
   }
+  
   /**
    * Prediction
    */
-
-  /**
-   * 
-   * Time is measured in seconds.
-   */
-
+   
   // compute the time elapsed between the current and previous measurements
-  // delta_t - expressed in seconds
-  double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
+  double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0; // delta_t - expressed in seconds
   time_us_ = meas_package.timestamp_;
-  
+
   /*
   if (delta_t > 0.0)
         Prediction(delta_t);
   */
   Prediction(delta_t);
-  
   
   /**
    * Update
@@ -234,8 +227,8 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
      //  Radar updates
      UpdateRadar(meas_package);
    
-  } else {
-    
+  }
+  else {   
     // Laser updates
     UpdateLidar(meas_package);
    
