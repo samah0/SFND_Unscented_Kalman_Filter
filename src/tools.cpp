@@ -1,5 +1,6 @@
 #include <iostream>
 #include "tools.h"
+#include <random>
 
 using namespace std;
 using std::vector;
