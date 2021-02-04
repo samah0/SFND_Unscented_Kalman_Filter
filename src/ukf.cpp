@@ -25,11 +25,11 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
   
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 5.;//3.;//1.; // 3 works for last car
+  std_a_ = 5.;
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   
-  std_yawdd_ = 5.; // 2.5 works for last car
+  std_yawdd_ = 5.; 
   
   // State dimension
   n_x_ = 5;
@@ -50,38 +50,41 @@ UKF::UKF() {
   MatrixXd Xsig_pred_ = MatrixXd(n_x_, 2 * n_aug_ + 1).setZero();
  
   // initial sigma points matrix
-  Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1).setZero();
+  //Xsig_ = MatrixXd(n_x_, 2 * n_x_ + 1).setZero();
   
   // initial augmented sigma points matrix
   Xsig_aug_ = MatrixXd(n_aug_, 2 * n_aug_ + 1).setZero();
   
-  // mean predicted measurement
+  // mean predicted measurement for Radar
   z_pred_ = VectorXd(n_z_).setZero();
   
-  // matrix with sigma points in measurement space
+  // matrix with sigma points in measurement space: Radar
   Zsig_ = MatrixXd(n_z_, 2 * n_aug_ + 1).setZero();
   
-     // mean predicted measurement
+  // mean predicted measurement for Lidar
   z_pred_laser_ = VectorXd(2).setZero();
   
-  // matrix with sigma points in measurement space
+  // matrix with sigma points in measurement space: Lidar
   Zsig_laser_ = MatrixXd(2, 2 * n_aug_ + 1).setZero();
 
 
-  // measurement covariance matrix S
+  // measurement covariance matrix: RADAR 
   S_ = MatrixXd(n_z_,n_z_).setZero();
+  
+  // measurement covariance matrix: LASER
   S_laser_ = MatrixXd(2,2).setZero();
-  // measurement noise covariance matrix
-  //R = MatrixXd(3,3).setZero();
   
-  R_laser_= MatrixXd(2, 2);
+  // measurement noise covariance matrix: RADAR
   R_radar_ = MatrixXd(3, 3);
-  // initial weights of sigma points
-  weights_ = VectorXd(2*n_aug_+1).setZero();
   
-
+  // measurement noise covariance matrix:LASER
+  R_laser_= MatrixXd(2, 2);
+  
   // initialize spreading parameter
   lambda_ = 3 - n_aug_; 
+  
+  // initial weights of sigma points
+  weights_ = VectorXd(2*n_aug_+1).setZero();
   
   // set vector for weights
   double weight_0 = lambda_/(lambda_+n_aug_);
@@ -150,7 +153,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
       double yaw = atan2(vy,vx);
       
       // set the state with the initial location and velocity
-       x_.fill(0);
+      x_.fill(0);
       x_ << x, y, v, yaw, 0;
       //x_ << x, y, v, 0, 0;
       /*
@@ -161,7 +164,7 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
             0, 0, std_radrd_*std_radrd_, 0, 0,
             0, 0, 0, std_radphi_*std_radphi_, 0,
             0, 0, 0, 0, std_radrd_*std_radrd_; 
- */
+      */
  
     }
     else if (meas_package.sensor_type_ == MeasurementPackage::LASER) {
@@ -185,22 +188,22 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     
        P_.fill(0);
        /* // works for last car
-        P_ << std_laspx_*std_laspx_,0,0,0,0,
+       P_ << std_laspx_*std_laspx_,0,0,0,0,
           0,std_laspy_*std_laspy_,0,0,0,
           0, 0, 0.1, 0, 0,
           0, 0, 0, 0.1, 0,
           0, 0, 0, 0, 0.1; 
-          */
+       */
              
-            P_ << 0.05, 0, 0, 0, 0,
+      P_ << 0.05, 0, 0, 0, 0,
             0, 0.05, 0, 0, 0,
             0, 0, std_radrd_*std_radrd_, 0, 0,
             0, 0, 0, std_radphi_*std_radphi_, 0,
             0, 0, 0, 0, std_radrd_*std_radrd_;        
             
       
-    // initialize measurement noise covariance matrix
-    R_radar_ <<  std_radr_*std_radr_, 0, 0,
+     // initialize measurement noise covariance matrix
+     R_radar_ <<  std_radr_*std_radr_, 0, 0,
           0, std_radphi_*std_radphi_, 0,
           0, 0,std_radrd_*std_radrd_;
     
@@ -219,38 +222,27 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
    * Prediction
    */
 
-  /**
-   * 
-   * Time is measured in seconds.
-   */
-
   // compute the time elapsed between the current and previous measurements
   // delta_t - expressed in seconds
   double delta_t = (meas_package.timestamp_ - time_us_) / 1000000.0;
-  time_us_ = meas_package.timestamp_;
+  time_us_ = meas_package.timestamp_; // Time is measured in seconds.
   Prediction(delta_t);
   
   /**
    * Update
    */
-
  
   if (meas_package.sensor_type_ == MeasurementPackage::RADAR) {
   
-    //  Radar updates
-    //std::cout << "Radar updates..." << std::endl;
+   // Radar updates
    UpdateRadar(meas_package);
     
-   
   } else {
     
     // Laser updates
-    //std::cout << "Laser updates..." << std::endl; 
     UpdateLidar(meas_package);
-    //std::cout << "pass..." << std::endl; 
+    
   }
-//std::cout << "x_ = " <<x_<< std::endl;
-   
 }
 
 void UKF::Prediction(double delta_t) {

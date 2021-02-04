@@ -75,7 +75,7 @@ class UKF {
   Eigen::MatrixXd Xsig_pred_;
   
   // sigma points matrix
-  Eigen::MatrixXd Xsig_;
+  //Eigen::MatrixXd Xsig_;
   
   // augmented sigma points matrix
   Eigen::MatrixXd Xsig_aug_;
@@ -93,11 +93,12 @@ class UKF {
   Eigen:: MatrixXd S_;
   Eigen::MatrixXd S_laser_;
   
-  // measurement noise covariance matrix
-  //Eigen::MatrixXd R;
-  Eigen::MatrixXd R_laser_;
+  // measurement noise covariance matrix: RADAR
   Eigen::MatrixXd R_radar_;
-
+  
+  // measurement covariance matrix: LASER
+  Eigen::MatrixXd R_laser_;
+  
   // Weights of sigma points
   Eigen::VectorXd weights_;
  
@@ -124,7 +125,6 @@ class UKF {
 
   // Radar measurement noise standard deviation radius change in m/s
   double std_radrd_ ;
-
 
   // State dimension
   int n_x_;
