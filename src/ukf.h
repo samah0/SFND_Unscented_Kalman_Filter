@@ -135,13 +135,10 @@ class UKF {
   // Sigma point spreading parameter
   double lambda_;
   
-  double lambda;
   
   // set measurement dimension, radar can measure r, phi, and r_dot
   int n_z_;
   
-  // previous timestamp
-  long long previous_timestamp_;
 };
 
 #endif  // UKF_H
