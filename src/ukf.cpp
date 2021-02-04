@@ -186,11 +186,11 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     }
     
        P_.fill(0);
-       P_ << 0.2,0,0,0,0,
+       P_ << std_laspx_*std_laspx_,0,0,0,0,
           0,std_laspy_*std_laspy_,0,0,0,
-          0, 0, 1, 0, 0,
-          0, 0, 0, 1, 0,
-          0, 0, 0, 0, 1; 
+          0, 0, 0.1, 0, 0,
+          0, 0, 0, 0.1, 0,
+          0, 0, 0, 0, 0.1; 
       
     // initialize measurement noise covariance matrix
     R_radar_ <<  std_radr_*std_radr_, 0, 0,
