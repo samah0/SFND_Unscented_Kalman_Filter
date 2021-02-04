@@ -25,11 +25,11 @@ UKF::UKF() {
   P_ = MatrixXd(5, 5);
   
   // Process noise standard deviation longitudinal acceleration in m/s^2
-  std_a_ = 3.;//7.;//3; //30;
+  std_a_ = 1.; // 3 works for last car
 
   // Process noise standard deviation yaw acceleration in rad/s^2
   
-  std_yawdd_ = 2.5;//3.;//pi/8; //30;
+  std_yawdd_ = 5.; // 2.5 works for last car
   
   // State dimension
   n_x_ = 5;
@@ -186,11 +186,24 @@ void UKF::ProcessMeasurement(MeasurementPackage meas_package) {
     }
     
        P_.fill(0);
-       P_ << std_laspx_*std_laspx_,0,0,0,0,
+       /* // works for last car
+        P_ << std_laspx_*std_laspx_,0,0,0,0,
           0,std_laspy_*std_laspy_,0,0,0,
           0, 0, 0.1, 0, 0,
           0, 0, 0, 0.1, 0,
           0, 0, 0, 0, 0.1; 
+          */
+          /*
+       P_ << std_laspx_*std_laspx_,0,0,0,0,
+             0,std_laspy_*std_laspy_,0,0,0,
+             0, 0, 1, 0, 0,
+             0, 0, 0, 1, 0,
+             0, 0, 0, 0, 1; */
+      P_ << std_laspx_*std_laspx_, 0, 0, 0, 0,
+            0, 0.05, 0, 0, 0,
+            0, 0, std_radrd_*std_radrd_, 0, 0,
+            0, 0, 0, std_radphi_*std_radphi_, 0,
+            0, 0, 0, 0, std_radrd_*std_radrd_;        
       
     // initialize measurement noise covariance matrix
     R_radar_ <<  std_radr_*std_radr_, 0, 0,
