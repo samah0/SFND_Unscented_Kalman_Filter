@@ -40,21 +40,14 @@ class UKF {
    * @param meas_package The measurement at k+1
    */
   void UpdateRadar(MeasurementPackage meas_package);
-
-  
-  void GenerateSigmaPoints(Eigen::MatrixXd* Xsig_out);
-  void AugmentedSigmaPoints(Eigen::MatrixXd* Xsig_out);
-  void SigmaPointPrediction(Eigen::MatrixXd* Xsig_out, double delta_t);
-  void PredictMeanAndCovariance(Eigen::VectorXd* x_pred, 
-                                Eigen::MatrixXd* P_pred);
-  void PredictRadarMeasurement(Eigen::VectorXd* z_out, 
-                               Eigen::MatrixXd* S_out);
-  void UpdateState(Eigen::VectorXd* x_out, 
-                   Eigen::MatrixXd* P_out,MeasurementPackage meas_package);
+  void AugmentedSigmaPoints();
+  void SigmaPointPrediction(double delta_t);
+  void PredictMeanAndCovariance();
+  void PredictRadarMeasurement();
+  void UpdateState(MeasurementPackage meas_package);
   
   void PredictLaserMeasurement();                 
-  void UpdateState_Laser(Eigen::VectorXd* x_out, 
-                   Eigen::MatrixXd* P_out, MeasurementPackage meas_package);                 
+  void UpdateState_Laser(MeasurementPackage meas_package); 
 
   // initially set to false, set to true in first call of ProcessMeasurement
   bool is_initialized_;
@@ -80,23 +73,28 @@ class UKF {
   // augmented sigma points matrix
   Eigen::MatrixXd Xsig_aug_;
   
-  // mean predicted measurement
+  // mean predicted measurement: RADAR
   Eigen::VectorXd z_pred_;
   
-  // matrix with sigma points in measurement space
+  // mean predicted measurement: LASER
+  Eigen::MatrixXd z_pred_laser_;
+  
+  // matrix with sigma points in measurement space: RADAR
   Eigen::MatrixXd Zsig_;
   
-  Eigen::MatrixXd z_pred_laser_;
+  // matrix with sigma points in measurement space: LASER
   Eigen::MatrixXd Zsig_laser_;
   
-  // measurement covariance matrix S
+  // measurement covariance matrix: RADAR
   Eigen:: MatrixXd S_;
+  
+  // measurement covariance matrix; LASER
   Eigen::MatrixXd S_laser_;
   
   // measurement noise covariance matrix: RADAR
   Eigen::MatrixXd R_radar_;
   
-  // measurement covariance matrix: LASER
+  // measurement noise covariance matrix: LASER
   Eigen::MatrixXd R_laser_;
   
   // Weights of sigma points
@@ -134,7 +132,6 @@ class UKF {
 
   // Sigma point spreading parameter
   double lambda_;
-  
   
   // set measurement dimension, radar can measure r, phi, and r_dot
   int n_z_;
